@@ -4,13 +4,9 @@ echo "Welcome to LugOS..." # insert content here
 # Your host distro will be installed as a strata by design, so one of the 2 lines below will error out; this is undesirable behaviour.
   
 if [ "$(command -v apt)" ] && [ -f "/etc/debian_version" ]; then
-    # if Ubuntu or Debian, fetch only the Arch stratum... Ubuntu also has /etc/debian_version
-    # sudo apt install -y pipx
     sudo brl fetch arch
 elif [ "$(command -v pacman)" ] && [ -f "/etc/arch-release" ]; then
-    # If Arch, fetch only the Ubuntu stratum.
     sudo brl fetch ubuntu -m http://repo.huaweicloud.com/ubuntu -r mantic 
-    # sudo brl fetch ubuntu -m http://repo.huaweicloud.com/ubuntu -r jammy 
 fi
 
 sudo sed 's/timeout = 30/timeout = 0/g' -i /bedrock/etc/bedrock.conf # set no bootloader timeout, don't complicate for users...
@@ -18,12 +14,11 @@ sudo sed 's/timeout = 30/timeout = 0/g' -i /bedrock/etc/bedrock.conf # set no bo
 # setup Gnome extensions, strata does not matter anymore; use Arch stuff...
 sudo pacman -S python-pipx --needed --noconfirm
 pipx ensurepath >/dev/null # adds ~/.local/bin to PATH
+export PATH=~/.local/bin:$PATH
 source ~/.bashrc
-# setup Gnome extensions, strata does not matter anymore; use Arch stuff...
 pipx install gnome-extensions-cli  > /dev/null
 pipx runpip gnome-extensions-cli install pygobject > /dev/null
 sudo apt install -y nala 
-export PATH=~/.local/bin:$PATH
 # Define an array of extension names
 extensions=(
   widgets@Aylur
